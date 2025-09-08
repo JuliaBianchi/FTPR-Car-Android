@@ -75,7 +75,9 @@ class MainActivity : AppCompatActivity() {
                 binding.swipeRefreshLayout.isRefreshing = false
                 when (result) {
                     is Result.Success -> {
-                        val adapter = CarAdapter(result.data)
+                        val adapter = CarAdapter(result.data) { item ->
+                           startActivity(CarDetailActivity.newIntent(this@MainActivity, item.id))
+                        }
                         binding.recyclerView.adapter = adapter
                         Log.d("MainActivity", "Items fetched: ${result.data}")
                     }
