@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myapitest.adapter.CarAdapter
 import com.example.myapitest.databinding.ActivityMainBinding
 import com.example.myapitest.service.RetrofitClient
 import com.example.myapitest.service.safeApiCall
@@ -13,6 +15,8 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.example.myapitest.service.Result
+import kotlinx.coroutines.withContext
 
 
 class MainActivity : AppCompatActivity() {
@@ -42,6 +46,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.swipeRefreshLayout.isRefreshing = true
+            fetchItems()
+        }
         binding.logoutCta.setOnClickListener {
             onLogout()
         }
@@ -63,8 +71,25 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             val result = safeApiCall { RetrofitClient.apiService.getCars() }
 
-            Log.d("Hello", "fetchItems: $result")
+            withContext(Dispatchers.Main) {
+                binding.swipeRefreshLayout.isRefreshing = false
+                when (result) {
+                    is Result.Success -> {
+                        val adapter = CarAdapter(result.data)
+                        binding.recyclerView.adapter = adapter
+                        Log.d("MainActivity", "Items fetched: ${result.data}")
+                    }
 
+                    is Result.Error -> {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Error ${result.code}: ${result.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.e("MainActivity", "Error ${result.code}: ${result.message}")
+                    }
+                }
+            }
         }
     }
 
