@@ -16,4 +16,5 @@
     <string name="error_login_verification">Erro ao verificar o código SMS</string>
     <string name="error_update">Erro ao atualizar o item</string>
     <string name="success_update">Item atualizado com sucesso!</string>
+    <string name="sair">Sair</string>
 </resources>
