@@ -7,11 +7,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapitest.R
-import com.example.myapitest.ui.loadUrl
 import com.example.myapitest.model.Car
+import com.example.myapitest.ui.loadUrl
 
 class CarAdapter (
-    private val items: List<Car>
+    private val items: List<Car>,
+    private val itemClickListener: (Car) -> Unit
 
 ) : RecyclerView.Adapter<CarAdapter.CarViewHolder>() {
 
@@ -27,6 +28,9 @@ class CarAdapter (
         holder.year.text = item.year
         holder.license.text = item.licence
         holder.imageView.loadUrl(item.imageUrl)
+        holder.itemView.setOnClickListener {
+            itemClickListener(item)
+        }
 
     }
 
