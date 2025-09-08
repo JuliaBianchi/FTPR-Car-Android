@@ -3,10 +3,17 @@ package com.example.myapitest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapitest.databinding.ActivityMainBinding
+import com.example.myapitest.service.RetrofitClient
+import com.example.myapitest.service.safeApiCall
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,12 +25,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         requestLocationPermission()
         setupView()
-
-        // 1- Criar tela de Login com algum provedor do Firebase (Telefone, Google)
-        //      Cadastrar o Seguinte celular para login de test: +5511912345678
-        //      Código de verificação: 101010
-
-        // 2- Criar Opção de Logout no aplicativo
 
         // 3- Integrar API REST /car no aplicativo
         //      API será disponibilida no Github
@@ -59,8 +60,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchItems() {
-        // TODO
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = safeApiCall { RetrofitClient.apiService.getCars() }
+
+            Log.d("Hello", "fetchItems: $result")
+
+        }
     }
+
 
     companion object {
         fun newIntent(context: Context) = Intent(context, MainActivity::class.java)
