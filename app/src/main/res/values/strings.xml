@@ -5,6 +5,8 @@
     <string name="error_login">Erro ao fazer Login</string>
     <string name="success_login_sent">Código enviado por SMS\n</string>
     <string name="error_login_verification">Erro ao verificar o código SMS</string>
+    <string name="erro_delete">Ocorreu um erro ao deletar o item.</string>
+    <string name="success_delete">Item deletado com sucesso!</string>
     <string name="sair">Sair</string>
     <string name="logout">Sair</string>
 </resources>
