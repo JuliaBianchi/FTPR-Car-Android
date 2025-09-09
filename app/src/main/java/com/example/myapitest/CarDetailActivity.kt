@@ -6,40 +6,70 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.myapitest.databinding.ActivityCarDetailBinding
+import com.example.myapitest.model.Car
+import com.example.myapitest.service.Result
 import com.example.myapitest.service.RetrofitClient
 import com.example.myapitest.service.safeApiCall
+import com.example.myapitest.ui.loadUrl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CarDetailActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityCarDetailBinding
+    private lateinit var car: Car
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityCarDetailBinding.inflate(layoutInflater)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_car_detail)
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        setContentView(binding.root)
+        setupView()
 
         loadItem()
+    }
+
+    private fun setupView() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
     private fun loadItem() {
         val itemId = intent.getStringExtra(ARG_ID) ?: ""
 
         CoroutineScope(Dispatchers.IO).launch {
-            val result = safeApiCall { RetrofitClient.apiService.getCarById(itemId)}
+            val result = safeApiCall { RetrofitClient.apiService.getCarById(itemId) }
 
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is Result.Success -> {
+                        car = result.data.value
+                        handleSuccess()
 
+                    }
 
-
-
+                    is Result.Error -> {
+                        hadleError()
+                    }
+                }
+            }
         }
+    }
+
+    private fun handleSuccess() {
+        binding.etYear.setText(car.year)
+        binding.etName.setText(car.name)
+        binding.etLicense.setText(car.licence)
+        binding.imageUrl.loadUrl(car.imageUrl)
+    }
+
+    private fun hadleError() {
+
     }
 
     companion object {
