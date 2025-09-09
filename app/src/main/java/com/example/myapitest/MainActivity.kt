@@ -29,6 +29,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.withContext
 
+// Adicionar funções de POST - PUT
+// Adicionar exibição do place no maps - google cloud
 
 class MainActivity : AppCompatActivity() {
 
