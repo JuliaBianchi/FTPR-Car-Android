@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapitest.databinding.ActivityCarDetailBinding
@@ -37,6 +38,9 @@ class CarDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         binding.toolbar.setNavigationOnClickListener { finish() }
+        binding.deleteCTA.setOnClickListener {
+            deleteItem()
+        }
     }
 
     private fun loadItem() {
@@ -58,6 +62,25 @@ class CarDetailActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun deleteItem() {
+        CoroutineScope(Dispatchers.IO).launch {
+           val result = safeApiCall { RetrofitClient.apiService.deleteById(car.id) }
+
+            withContext(Dispatchers.Main){
+                when (result){
+                    is Result.Error -> {
+                        Toast.makeText(this@CarDetailActivity, R.string.erro_delete, Toast.LENGTH_SHORT).show()
+                    }
+                    is Result.Success -> {
+                        Toast.makeText(this@CarDetailActivity, R.string.success_delete, Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                }
+            }
+
         }
     }
 
