@@ -9,4 +9,5 @@
     <string name="success_delete">Item deletado com sucesso!</string>
     <string name="sair">Sair</string>
     <string name="logout">Sair</string>
+    <string name="empty_list">A lista de itens está vazia!</string>
 </resources>
