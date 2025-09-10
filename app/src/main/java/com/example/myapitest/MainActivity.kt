@@ -8,6 +8,7 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,6 +17,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapitest.adapter.CarAdapter
+import com.example.myapitest.database.DatabaseBuilder
+import com.example.myapitest.database.model.UserLocation
 import com.example.myapitest.databinding.ActivityMainBinding
 import com.example.myapitest.service.RetrofitClient
 import com.example.myapitest.service.safeApiCall
@@ -92,15 +95,21 @@ class MainActivity : AppCompatActivity() {
     private fun checkLocationPermissionAndRequest() {
         when {
             checkSelfPermission(ACCESS_FINE_LOCATION) == PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED -> {
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        ACCESS_COARSE_LOCATION
+                    ) == PERMISSION_GRANTED -> {
                 getLastLocation()
             }
+
             shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION) -> {
                 locationPermissionLauncher.launch(ACCESS_FINE_LOCATION)
             }
+
             shouldShowRequestPermissionRationale(ACCESS_COARSE_LOCATION) -> {
                 locationPermissionLauncher.launch(ACCESS_COARSE_LOCATION)
             }
+
             else -> {
                 locationPermissionLauncher.launch(ACCESS_FINE_LOCATION)
             }
@@ -119,13 +128,19 @@ class MainActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 val location = task.result
                 Log.d("Hello World", "Lat: ${location.latitude} Long: ${location.longitude}")
+                val userLocation =
+                    UserLocation(latitude = location.latitude, longitude = location.longitude)
 
+                CoroutineScope(Dispatchers.IO).launch {
+                    DatabaseBuilder.getInstance()
+                        .userLocationDao()
+                        .insert(userLocation)
+                }
             } else {
                 Toast.makeText(this, R.string.unknown_error, Toast.LENGTH_SHORT).show()
             }
         }
     }
-
 
 
     private fun fetchItems() {
@@ -140,6 +155,12 @@ class MainActivity : AppCompatActivity() {
                             startActivity(CarDetailActivity.newIntent(this@MainActivity, item.id))
                         }
                         binding.recyclerView.adapter = adapter
+
+                        if (result.data.isEmpty()) {
+                            binding.recyclerView.visibility = View.GONE
+                            binding.emptyListText.visibility = View.VISIBLE
+                        }
+
                         Log.d("MainActivity", "Items fetched: ${result.data}")
                     }
 
