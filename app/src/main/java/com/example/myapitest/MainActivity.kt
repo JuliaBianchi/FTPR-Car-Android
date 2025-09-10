@@ -62,10 +62,18 @@ class MainActivity : AppCompatActivity() {
             binding.swipeRefreshLayout.isRefreshing = true
             fetchItems()
         }
+        binding.addCta.setOnClickListener {
+            navigateToNewItem()
+        }
         binding.logoutCta.setOnClickListener {
             onLogout()
         }
     }
+
+    private fun navigateToNewItem() {
+        startActivity(NewItemActivity.newIntent(this))
+    }
+
 
     private fun onLogout() {
         FirebaseAuth.getInstance().signOut()
