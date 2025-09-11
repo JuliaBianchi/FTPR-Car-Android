@@ -18,6 +18,9 @@
         android:theme="@style/Theme.AppCompat.DayNight"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value=""/>
+
         <activity
             android:name=".NewItemActivity"
             android:exported="false"
