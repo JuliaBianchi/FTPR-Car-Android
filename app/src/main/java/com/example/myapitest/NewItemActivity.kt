@@ -35,7 +35,10 @@ class NewItemActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityNewItemBinding.inflate(layoutInflater)
         enableEdgeToEdge()
         setContentView(binding.root)
+
+        // Buscar localização do usuário - GPS, Wifi, 3G/4G
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
         setupView()
         setupGoogleMap()
     }
