@@ -60,7 +60,6 @@ class CarDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             mMap.addMarker(
                 MarkerOptions()
                     .position(latLong)
-                    .title(name)
             )
             mMap.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
