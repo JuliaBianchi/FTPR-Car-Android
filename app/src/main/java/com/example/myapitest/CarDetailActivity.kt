@@ -76,9 +76,15 @@ class CarDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        binding.toolbar.setNavigationOnClickListener { finish() }
+
+        binding.toolbar.setNavigationOnClickListener {
+            finish()
+        }
         binding.deleteCTA.setOnClickListener {
             deleteItem()
+        }
+        binding.editCTA.setOnClickListener {
+            editItem()
         }
     }
 
@@ -126,6 +132,43 @@ class CarDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
 
+        }
+    }
+
+    private fun editItem() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = safeApiCall {
+                RetrofitClient.apiService.updateItem(
+                    car.id,
+                    car.copy(
+                        name = binding.etName.text.toString(),
+                        year = binding.etYear.text.toString(),
+                        licence = binding.etLicense.text.toString()
+                    )
+                )
+            }
+
+            Log.d("TAG", "editItem: $result")
+
+            withContext(Dispatchers.Main) {
+                when (result) {
+                    is Result.Error -> {
+                        Toast.makeText(
+                            this@CarDetailActivity,
+                            R.string.error_update,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    is Result.Success -> {
+                        Toast.makeText(
+                            this@CarDetailActivity,
+                            R.string.success_update,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        finish()
+                    }
+                }
+            }
         }
     }
 

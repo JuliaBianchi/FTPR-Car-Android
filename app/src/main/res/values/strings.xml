@@ -16,4 +16,6 @@
     <string name="success_create">Carro %1$s adicionado com sucesso!</string>
     <string name="error_upload_image">Erro ao fazer o upload da imagem.</string>
     <string name="error_request_camera">Permissão de câmera não concedida</string>
+    <string name="error_update">Erro ao atualizar o item</string>
+    <string name="success_update">Item atualizado com sucesso!</string>
 </resources>
