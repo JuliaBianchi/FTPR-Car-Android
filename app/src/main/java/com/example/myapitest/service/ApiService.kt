@@ -13,7 +13,6 @@ interface ApiService {
     @GET("/car") suspend fun getCars(): List<Car>
     @GET("/car/{id}") suspend fun getCarById(@Path("id") id: String): CarValue
     @DELETE("/car/{id}") suspend fun deleteById(@Path("id") id: String)
-
-    @POST("/car") suspend fun addItem(@Body item: CarValue): Car
+    @POST("/car") suspend fun addItem(@Body item: Car): Car
 
 }

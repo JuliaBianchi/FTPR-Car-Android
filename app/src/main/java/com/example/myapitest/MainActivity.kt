@@ -164,11 +164,6 @@ class MainActivity : AppCompatActivity() {
                         }
                         binding.recyclerView.adapter = adapter
 
-                        if (result.data.isEmpty()) {
-                            binding.recyclerView.visibility = View.GONE
-                            binding.emptyListText.visibility = View.VISIBLE
-                        }
-
                         Log.d("MainActivity", "Items fetched: ${result.data}")
                     }
 
