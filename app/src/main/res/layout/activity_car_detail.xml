@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
-        android:text="Nome:"
+        android:text="@string/detail_tv_name"
         android:textSize="22sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageUrl" />
@@ -74,7 +74,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Ano:"
+        android:text="@string/detail_tv_year"
         android:textSize="22sp"
         app:layout_constraintStart_toStartOf="@id/tv_name"
         app:layout_constraintTop_toBottomOf="@id/et_name" />
@@ -99,7 +99,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Placa:"
+        android:text="@string/detail_tv_license"
         android:textSize="22sp"
         app:layout_constraintStart_toStartOf="@id/tv_year"
         app:layout_constraintTop_toBottomOf="@id/et_year" />
